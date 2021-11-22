@@ -3,8 +3,7 @@ const { Response } = require("../Response");
 const Request = require("../Request");
 const httpCodes = require("./constants/httpCodes");
 const StatusCodes = require("../constants/StatusCodes");
-const { isUrlMatches } = require("./utils");
-const { formatUrl } = require("../utils/urlUtils");
+const Route = require("../modules/Route");
 const { HOST } = require("../config");
 
 class Server {
@@ -23,13 +22,7 @@ class Server {
   }
 
   #register(url, method, callbacks) {
-    const formattedUrl = formatUrl(url);
-
-    this.#urlMapper.push({
-      url: formattedUrl,
-      method,
-      callbacks,
-    });
+    this.#urlMapper.push(new Route(url, method, callbacks));
   }
 
   get(url, ...args) {
@@ -74,11 +67,7 @@ class Server {
     if (this.#errorCallback) {
       this.#errorCallback(request, response, error);
     } else {
-      response
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({
-          message: "Something went wrong",
-        });
+      throw error;
     }
   }
 
@@ -86,20 +75,17 @@ class Server {
     const response = new Response(res);
     const request = new Request(req);
 
-    const finded = this.#urlMapper.find((el) =>
-      isUrlMatches(el, request)
+    const findedRoute = this.#urlMapper.find((route) =>
+      route.isRouteMatches(request)
     );
 
-    if (!finded)
+    if (!findedRoute)
       return this.#routeNotFound(request, response);
 
-    request.parseParams(finded.url);
+    request.parseParams(findedRoute.url);
 
     try {
-      finded.callbacks.forEach((callback) => {
-        if (response.isFinished()) return;
-        callback(request, response);
-      });
+      findedRoute.executeRouteCallbacks(request, response);
     } catch (e) {
       this.#applicationError(request, response, e);
     }

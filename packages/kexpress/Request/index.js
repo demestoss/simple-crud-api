@@ -1,42 +1,36 @@
 const url = require("url");
-const {
-  formatUrl,
-  isParameter,
-} = require("../utils/urlUtils");
+const Url = require("../modules/Url");
 
 class Request {
   #httpRequest = null;
+  #url;
 
   method = "";
-  url = "";
   params = {};
   query = {};
   body = {};
 
   constructor(req) {
     this.#httpRequest = req;
-    this.parseUrl();
+    this.#parseUrl();
     this.method = this.#httpRequest.method;
   }
 
-  parseUrl() {
+  #parseUrl() {
     const parsedUrl = url.parse(
       this.#httpRequest.url,
       true
     );
     this.query = parsedUrl.query;
-    this.url = formatUrl(parsedUrl.pathname);
+    this.#url = new Url(parsedUrl.pathname);
   }
 
-  parseParams(definedUrl) {
-    const httpUrl = this.url.split("/");
+  parseParams(routeUrl) {
+    this.params = routeUrl.getUrlParams(this.#url);
+  }
 
-    definedUrl.split("/").forEach((part, idx) => {
-      if (isParameter(part)) {
-        const name = part.slice(1, -1);
-        this.params[name] = httpUrl[idx];
-      }
-    });
+  get url() {
+    return this.#url;
   }
 }
 
