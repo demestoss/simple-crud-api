@@ -2,9 +2,13 @@ const UrlPart = require("./UrlPart");
 
 class Url {
   #url;
+  #splittedUrl;
 
   constructor(url) {
     this.#formatUrl(url);
+    this.#splittedUrl = this.#url
+      .split("/")
+      .map((part) => new UrlPart(part));
   }
 
   #deleteLastSlash(url) {
@@ -52,6 +56,12 @@ class Url {
   }
 
   getUrlParams(requestUrl) {
+    console.log(
+      this.splittedUrl,
+      this.#url,
+      requestUrl.urlString,
+      requestUrl.splittedUrl
+    );
     return this.splittedUrl.reduce((acc, part, idx) => {
       if (part.isParameter()) {
         const name = part.getParameterName();
@@ -63,14 +73,20 @@ class Url {
     }, {});
   }
 
+  startsWith(other) {
+    return this.#url.startsWith(other.urlString);
+  }
+
+  concat(other) {
+    return new Url(this.urlString + other.urlString);
+  }
+
   get urlString() {
     return this.#url;
   }
 
   get splittedUrl() {
-    return this.#url
-      .split("/")
-      .map((part) => new UrlPart(part));
+    return this.#splittedUrl;
   }
 }
 

@@ -1,7 +1,7 @@
 const Server = require("./Server");
-const StatusCodes = require("./constants/StatusCodes");
+const Router = require("./modules/Router");
 
 module.exports = {
   Server,
-  StatusCodes,
+  Router,
 };

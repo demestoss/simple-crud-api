@@ -11,11 +11,12 @@ class Route {
     this.#callbacks = callbacks;
   }
 
-  isRouteMatches(request) {
+  isRouteMatches(request, prefix) {
+    const fullUrl = prefix.concat(this.#url);
     if (this.#method !== request.method) return false;
-    if (this.#url.isEquals(request.url)) return true;
+    if (fullUrl.isEquals(request.url)) return true;
 
-    return this.#url.haveTheSameParts(request.url);
+    return fullUrl.haveTheSameParts(request.url);
   }
 
   executeRouteCallbacks(request, response) {

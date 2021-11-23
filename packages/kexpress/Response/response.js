@@ -1,4 +1,3 @@
-const StatusCodes = require("../constants/StatusCodes");
 const {
   jsonHeaders,
   plainTextHeaders,
@@ -7,7 +6,7 @@ const {
 
 class Response {
   #httpResponse = null;
-  #statusCode = StatusCodes.OK;
+  #statusCode = 200;
   #headers = [];
 
   constructor(res) {

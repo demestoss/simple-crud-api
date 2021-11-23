@@ -1,8 +1,7 @@
-const {
-  Server,
-  StatusCodes,
-} = require("../packages/kexpress");
+const StatusCodes = require("./constants/StatusCodes");
+const { Server } = require("../packages/kexpress");
 const { APP_PORT } = require("./config");
+const personRouter = require("./modules/person/person.routes");
 
 const app = new Server();
 
@@ -12,9 +11,7 @@ app.get("/", (req, res) => {
     .json({ message: "Hello World" });
 });
 
-app.get("/admin/{id}", (req, res) => {
-  res.status(StatusCodes.OK).json({ message: req.params });
-});
+app.use(personRouter());
 
 app.notFound((req, res) => {
   res
@@ -23,6 +20,7 @@ app.notFound((req, res) => {
 });
 
 app.error((req, res, error) => {
+  console.log(error);
   res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
     .json({ message: error.message });

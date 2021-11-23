@@ -1,13 +1,13 @@
 const http = require("http");
 const { Response } = require("../Response");
 const Request = require("../Request");
-const httpCodes = require("./constants/httpCodes");
-const StatusCodes = require("../constants/StatusCodes");
-const Route = require("../modules/Route");
+const Router = require("../modules/Router");
+const RouterList = require("../modules/Router/RouterList");
 const { HOST } = require("../config");
 
 class Server {
-  #urlMapper = [];
+  #routerList = new RouterList();
+  #defaultRouter = new Router("");
   #notFoundCallback = null;
   #errorCallback = null;
 
@@ -21,28 +21,28 @@ class Server {
     this.server.listen(port, HOST, callback);
   }
 
-  #register(url, method, callbacks) {
-    this.#urlMapper.push(new Route(url, method, callbacks));
+  use(router) {
+    this.#routerList.push(router);
   }
 
   get(url, ...args) {
-    this.#register(url, httpCodes.GET, args);
+    this.#defaultRouter.get(url, ...args);
   }
 
   post(url, ...args) {
-    this.#register(url, httpCodes.POST, args);
+    this.#defaultRouter.post(url, ...args);
   }
 
   put(url, ...args) {
-    this.#register(url, httpCodes.PUT, args);
+    this.#defaultRouter.put(url, ...args);
   }
 
   patch(url, ...args) {
-    this.#register(url, httpCodes.PATCH, args);
+    this.#defaultRouter.patch(url, ...args);
   }
 
   delete(url, ...args) {
-    this.#register(url, httpCodes.DELETE, args);
+    this.#defaultRouter.delete(url, ...args);
   }
 
   notFound(callback) {
@@ -57,9 +57,7 @@ class Server {
     if (this.#notFoundCallback) {
       this.#notFoundCallback(request, response);
     } else {
-      response.status(StatusCodes.NOT_FOUND).json({
-        message: "Route not found",
-      });
+      throw new Error("Route was not found");
     }
   }
 
@@ -71,20 +69,26 @@ class Server {
     }
   }
 
+  #findRoute(request) {
+    return (
+      this.#routerList.findRouteByRequest(request) ||
+      this.#defaultRouter.findRouteByRequest(request)
+    );
+  }
+
   #requestLoop(req, res) {
     const response = new Response(res);
     const request = new Request(req);
 
-    const findedRoute = this.#urlMapper.find((route) =>
-      route.isRouteMatches(request)
-    );
-
-    if (!findedRoute)
-      return this.#routeNotFound(request, response);
-
-    request.parseParams(findedRoute.url);
-
     try {
+      const [findedRoute, fullUrl] =
+        this.#findRoute(request);
+
+      if (!findedRoute)
+        return this.#routeNotFound(request, response);
+
+      request.parseParams(fullUrl);
+
       findedRoute.executeRouteCallbacks(request, response);
     } catch (e) {
       this.#applicationError(request, response, e);

@@ -1,4 +1,4 @@
-const httpCodes = {
+const httpMethods = {
   GET: "GET",
   POST: "POST",
   PUT: "PUT",
@@ -6,4 +6,4 @@ const httpCodes = {
   DELETE: "DELETE",
 };
 
-module.exports = httpCodes;
+module.exports = httpMethods;
