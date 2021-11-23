@@ -21,10 +21,7 @@ class Router {
   }
 
   #findInOwnRoutes(request) {
-    const route = this.#routes.findRouteByRequest(
-      request,
-      this.#prefix
-    );
+    const route = this.#routes.findRouteByRequest(request, this.#prefix);
 
     return (
       route && {
@@ -36,15 +33,12 @@ class Router {
   }
 
   #findInChildRouters(request) {
-    const data =
-      this.#routerList.findRouteByRequest(request);
+    const data = this.#routerList.findRouteByRequest(request);
 
     return (
       data && {
         ...data,
-        middlewares: this.#middlewares.glue(
-          data.middlewares
-        ),
+        middlewares: this.#middlewares.glue(data.middlewares),
       }
     );
   }
@@ -52,16 +46,11 @@ class Router {
   findRouteByRequest(request) {
     if (!request.url.startsWith(this.#prefix)) return null;
 
-    return (
-      this.#findInChildRouters(request) ||
-      this.#findInOwnRoutes(request)
-    );
+    return this.#findInChildRouters(request) || this.#findInOwnRoutes(request);
   }
 
   #register(url, method, callbacks) {
-    this.#routes.add(
-      new Route(url, method, callbacks, this.#prefix)
-    );
+    this.#routes.add(new Route(url, method, callbacks, this.#prefix));
   }
 
   middleware(...args) {

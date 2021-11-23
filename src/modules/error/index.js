@@ -2,10 +2,8 @@ const StatusCodes = require("../../constants/StatusCodes");
 const { NotFoundError } = require("./errorTypes");
 const { ValidationError } = require("./errorTypes");
 
-const isValidationError = (error) =>
-  error instanceof ValidationError;
-const isNotFoundError = (error) =>
-  error instanceof NotFoundError;
+const isValidationError = (error) => error instanceof ValidationError;
+const isNotFoundError = (error) => error instanceof NotFoundError;
 
 const parse = (error) => {
   if (error.length) {
@@ -38,9 +36,7 @@ const parse = (error) => {
 const errorHandler = (req, res, error) => {
   const parsedError = parse(error);
 
-  res
-    .status(parsedError.code)
-    .json({ data: parsedError.message });
+  res.status(parsedError.code).json({ data: parsedError.message });
 };
 
 module.exports = errorHandler;

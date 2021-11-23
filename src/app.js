@@ -3,12 +3,8 @@ const StatusCodes = require("./constants/StatusCodes");
 const personRouter = require("./modules/person/person.routes");
 const notFoundHandler = require("./modules/notFound");
 const errorHandler = require("./modules/error");
-const {
-  IncorrectTypeValidationError,
-} = require("./modules/error/errorTypes");
-const {
-  RequiredValidationError,
-} = require("./modules/error/errorTypes");
+const { IncorrectTypeValidationError } = require("./modules/error/errorTypes");
+const { RequiredValidationError } = require("./modules/error/errorTypes");
 
 class App {
   #kexpressApp;
@@ -30,9 +26,7 @@ class App {
 
   run(port) {
     this.#kexpressApp.listen(port, () => {
-      console.log(
-        `Server has been started on port ${port}`
-      );
+      console.log(`Server has been started on port ${port}`);
     });
   }
 }

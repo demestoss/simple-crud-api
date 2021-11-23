@@ -15,13 +15,13 @@ class ValidationError extends DomainError {
 
 class RequiredValidationError extends ValidationError {
   constructor(fieldName) {
-    super(fieldName, "Field is Required");
+    super(fieldName, "Field is required");
   }
 }
 
 class IncorrectTypeValidationError extends ValidationError {
-  constructor(fieldName) {
-    super(fieldName, "Field type is incorrect");
+  constructor(fieldName, expectedType) {
+    super(fieldName, `Field should have ${expectedType} type`);
   }
 }
 
@@ -33,17 +33,9 @@ class NotFoundError extends DomainError {
   }
 }
 
-class InternalError extends DomainError {
-  constructor(error) {
-    super(error.message);
-    this.data = { error };
-  }
-}
-
 module.exports = {
   ValidationError,
   RequiredValidationError,
   IncorrectTypeValidationError,
   NotFoundError,
-  InternalError,
 };

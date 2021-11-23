@@ -6,15 +6,11 @@ class Url {
 
   constructor(url) {
     this.#formatUrl(url);
-    this.#splittedUrl = this.#url
-      .split("/")
-      .map((part) => new UrlPart(part));
+    this.#splittedUrl = this.#url.split("/").map((part) => new UrlPart(part));
   }
 
   #deleteLastSlash(url) {
-    return url && url.at(-1) === "/"
-      ? url.slice(0, -1)
-      : url;
+    return url && url.at(-1) === "/" ? url.slice(0, -1) : url;
   }
 
   #addFirstSlash(url) {
@@ -22,9 +18,7 @@ class Url {
   }
 
   #formatUrl(url) {
-    this.#url = this.#deleteLastSlash(
-      this.#addFirstSlash(url)
-    );
+    this.#url = this.#deleteLastSlash(this.#addFirstSlash(url));
   }
 
   isEquals(other) {
@@ -32,26 +26,17 @@ class Url {
   }
 
   haveTheSamePartsLength(other) {
-    return (
-      this.splittedUrl.length === other.splittedUrl.length
-    );
+    return this.splittedUrl.length === other.splittedUrl.length;
   }
 
   haveTheSameParts(requestUrl) {
-    if (!this.haveTheSamePartsLength(requestUrl))
-      return false;
+    if (!this.haveTheSamePartsLength(requestUrl)) return false;
 
     return this.splittedUrl.every((part, idx) => {
       const requestUrlPart = requestUrl.splittedUrl[idx];
-      if (
-        !requestUrlPart?.part &&
-        requestUrlPart.part !== ""
-      )
-        return false;
+      if (!requestUrlPart?.part && requestUrlPart.part !== "") return false;
 
-      return (
-        part.isParameter() || part.isEquals(requestUrlPart)
-      );
+      return part.isParameter() || part.isEquals(requestUrlPart);
     });
   }
 

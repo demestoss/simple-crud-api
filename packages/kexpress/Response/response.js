@@ -17,11 +17,9 @@ class Response {
     if (this.isFinished()) return;
 
     this.#httpResponse.statusCode = this.#statusCode;
-    [...this.#headers, ...headers].forEach(
-      ([key, value]) => {
-        this.#httpResponse.setHeader(key, value);
-      }
-    );
+    [...this.#headers, ...headers].forEach(([key, value]) => {
+      this.#httpResponse.setHeader(key, value);
+    });
     this.#httpResponse.end(data);
   }
 

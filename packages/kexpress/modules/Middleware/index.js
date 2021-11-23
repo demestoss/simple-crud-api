@@ -7,9 +7,7 @@ class Middleware {
   }
 
   static validateMiddlewares(middlewares) {
-    if (
-      !middlewares.every((arg) => arg instanceof Function)
-    )
+    if (!middlewares.every((arg) => arg instanceof Function))
       throw new Error("Middleware must be a function");
   }
 

@@ -6,9 +6,7 @@ class UrlPart {
   }
 
   isParameter() {
-    return (
-      this.#part[0] === "{" && this.#part.at(-1) === "}"
-    );
+    return this.#part[0] === "{" && this.#part.at(-1) === "}";
   }
 
   isEquals(other) {
@@ -16,9 +14,7 @@ class UrlPart {
   }
 
   getParameterName() {
-    return this.isParameter()
-      ? this.part.slice(1, -1)
-      : this.part;
+    return this.isParameter() ? this.part.slice(1, -1) : this.part;
   }
 
   get part() {

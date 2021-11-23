@@ -14,9 +14,7 @@ class Server {
   #errorCallback = null;
 
   constructor() {
-    this.server = http.createServer(
-      this.#requestLoop.bind(this)
-    );
+    this.server = http.createServer(this.#requestLoop.bind(this));
   }
 
   listen(port, callback) {
@@ -89,8 +87,7 @@ class Server {
     try {
       const data = this.#findRoute(request);
 
-      if (!data)
-        return this.#routeNotFound(request, response);
+      if (!data) return this.#routeNotFound(request, response);
 
       const { route, middlewares, fullUrl } = data;
 

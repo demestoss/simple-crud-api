@@ -6,9 +6,7 @@ class RouteList {
   }
 
   findRouteByRequest(request, prefix) {
-    return this.#routes.find((route) =>
-      route.isRouteMatches(request, prefix)
-    );
+    return this.#routes.find((route) => route.isRouteMatches(request, prefix));
   }
 }
 
