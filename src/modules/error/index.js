@@ -26,9 +26,10 @@ const parse = (error) => {
       message: error.data,
     };
   } else {
+    console.error(error);
     return {
       code: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: error.message,
+      message: "Something went wrong",
     };
   }
 };
@@ -36,7 +37,7 @@ const parse = (error) => {
 const errorHandler = (req, res, error) => {
   const parsedError = parse(error);
 
-  res.status(parsedError.code).json({ data: parsedError.message });
+  res.status(parsedError.code).json({ message: parsedError.message });
 };
 
 module.exports = errorHandler;
