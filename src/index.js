@@ -11,6 +11,15 @@ app.get("/", (req, res) => {
     .json({ message: "Hello World" });
 });
 
+app.middleware(
+  () => {
+    console.log("First APp middleware");
+  },
+  () => {
+    console.log("Second APp middleware");
+  }
+);
+
 app.use(personRouter());
 
 app.notFound((req, res) => {

@@ -3,11 +3,13 @@ const RouterList = require("./RouterList");
 const RouteList = require("../Route/RouteList");
 const Route = require("../Route");
 const Url = require("../Url");
+const Middleware = require("../Middleware");
 
 class Router {
   #prefix = new Url("");
   #routes = new RouteList();
   #routerList = new RouterList();
+  #middlewares = new Middleware();
 
   constructor(prefix) {
     this.#prefix = new Url(prefix);
@@ -19,14 +21,32 @@ class Router {
   }
 
   #findInOwnRoutes(request) {
-    return this.#routes.findRouteByRequest(
+    const route = this.#routes.findRouteByRequest(
       request,
       this.#prefix
+    );
+
+    return (
+      route && {
+        route,
+        middlewares: this.#middlewares,
+        fullUrl: this.#prefix.concat(route.url),
+      }
     );
   }
 
   #findInChildRouters(request) {
-    return this.#routerList.findRouteByRequest(request);
+    const data =
+      this.#routerList.findRouteByRequest(request);
+
+    return (
+      data && {
+        ...data,
+        middlewares: this.#middlewares.glue(
+          data.middlewares
+        ),
+      }
+    );
   }
 
   findRouteByRequest(request) {
@@ -42,6 +62,10 @@ class Router {
     this.#routes.add(
       new Route(url, method, callbacks, this.#prefix)
     );
+  }
+
+  middleware(...args) {
+    this.#middlewares.push(...args);
   }
 
   use(router) {

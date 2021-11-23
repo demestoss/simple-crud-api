@@ -4,6 +4,15 @@ const StatusCodes = require("../../constants/StatusCodes");
 module.exports = () => {
   const router = new Router("/person");
 
+  router.middleware(
+    () => {
+      console.log("First Person middleware");
+    },
+    () => {
+      console.log("Second Person middleware");
+    }
+  );
+
   router.get("/", (req, res) => {
     res
       .status(StatusCodes.OK)

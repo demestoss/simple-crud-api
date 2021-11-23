@@ -3,11 +3,13 @@ const { Response } = require("../Response");
 const Request = require("../Request");
 const Router = require("../modules/Router");
 const RouterList = require("../modules/Router/RouterList");
+const Middleware = require("../modules/Middleware");
 const { HOST } = require("../config");
 
 class Server {
   #routerList = new RouterList();
   #defaultRouter = new Router("");
+  #middlewares = new Middleware();
   #notFoundCallback = null;
   #errorCallback = null;
 
@@ -19,6 +21,10 @@ class Server {
 
   listen(port, callback) {
     this.server.listen(port, HOST, callback);
+  }
+
+  middleware(...args) {
+    this.#middlewares.push(...args);
   }
 
   use(router) {
@@ -86,12 +92,14 @@ class Server {
       if (!data)
         return this.#routeNotFound(request, response);
 
-      const [findedRoute, fullUrl] = data;
+      const { route, middlewares, fullUrl } = data;
 
       await request.parseBody();
       request.parseParams(fullUrl);
 
-      findedRoute.executeRouteCallbacks(request, response);
+      this.#middlewares.execute(request, response);
+      middlewares.execute(request, response);
+      route.executeRouteCallbacks(request, response);
     } catch (e) {
       this.#applicationError(request, response, e);
     }

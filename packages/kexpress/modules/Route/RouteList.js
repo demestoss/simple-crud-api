@@ -6,15 +6,8 @@ class RouteList {
   }
 
   findRouteByRequest(request, prefix) {
-    const findedRoute = this.#routes.find((route) =>
+    return this.#routes.find((route) =>
       route.isRouteMatches(request, prefix)
-    );
-
-    return (
-      findedRoute && [
-        findedRoute,
-        prefix.concat(findedRoute.url),
-      ]
     );
   }
 }
