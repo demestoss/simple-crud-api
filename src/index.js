@@ -20,7 +20,7 @@ app.notFound((req, res) => {
 });
 
 app.error((req, res, error) => {
-  console.log(error);
+  console.error(error);
   res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
     .json({ message: error.message });

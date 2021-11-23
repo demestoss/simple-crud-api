@@ -14,7 +14,7 @@ module.exports = () => {
     res.status(StatusCodes.OK).json({ message: req.body });
   });
 
-  router.get("{personId}", (req, res) => {
+  router.get("/{personId}", (req, res) => {
     res
       .status(StatusCodes.OK)
       .json({ message: req.params.personId });

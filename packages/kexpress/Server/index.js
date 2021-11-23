@@ -76,17 +76,19 @@ class Server {
     );
   }
 
-  #requestLoop(req, res) {
+  async #requestLoop(req, res) {
     const response = new Response(res);
     const request = new Request(req);
 
     try {
-      const [findedRoute, fullUrl] =
-        this.#findRoute(request);
+      const data = this.#findRoute(request);
 
-      if (!findedRoute)
+      if (!data)
         return this.#routeNotFound(request, response);
 
+      const [findedRoute, fullUrl] = data;
+
+      await request.parseBody();
       request.parseParams(fullUrl);
 
       findedRoute.executeRouteCallbacks(request, response);

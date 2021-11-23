@@ -56,12 +56,6 @@ class Url {
   }
 
   getUrlParams(requestUrl) {
-    console.log(
-      this.splittedUrl,
-      this.#url,
-      requestUrl.urlString,
-      requestUrl.splittedUrl
-    );
     return this.splittedUrl.reduce((acc, part, idx) => {
       if (part.isParameter()) {
         const name = part.getParameterName();

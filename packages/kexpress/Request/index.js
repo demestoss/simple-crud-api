@@ -1,5 +1,6 @@
 const url = require("url");
 const Url = require("../modules/Url");
+const httpMethods = require("../modules/Router/constants/httpMethods");
 
 class Request {
   #httpRequest = null;
@@ -13,6 +14,7 @@ class Request {
   constructor(req) {
     this.#httpRequest = req;
     this.#parseUrl();
+
     this.method = this.#httpRequest.method;
   }
 
@@ -23,6 +25,30 @@ class Request {
     );
     this.query = parsedUrl.query;
     this.#url = new Url(parsedUrl.pathname);
+  }
+
+  async parseBody() {
+    if (
+      [
+        httpMethods.POST,
+        httpMethods.PUT,
+        httpMethods.PATCH,
+      ].includes(this.method)
+    ) {
+      const buffers = [];
+      for await (const chunk of this.#httpRequest) {
+        buffers.push(chunk);
+      }
+      const data = Buffer.concat(buffers).toString();
+
+      try {
+        this.body = JSON.parse(data);
+      } catch (e) {
+        throw new Error(
+          "Cannot parse request body. Invalid JSON data"
+        );
+      }
+    }
   }
 
   parseParams(routeUrl) {
