@@ -35,6 +35,8 @@ class Validator {
   }
 
   _throwErrors() {
+    if (this._isErrorsEmpty()) return;
+
     const errors = this._errors;
     this._clearErrors();
     throw errors;

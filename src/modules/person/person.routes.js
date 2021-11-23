@@ -7,9 +7,22 @@ module.exports = () => {
 
   router.get("/", PersonController.getPersons);
   router.post("/", PersonValidator.validateDto, PersonController.createPerson);
-  router.get("/{personId}", PersonController.getPersonById);
-  router.put("/{personId}", PersonController.updatePerson);
-  router.delete("/{personId}", PersonController.deletePerson);
+  router.get(
+    "/{personId}",
+    PersonValidator.validateIdParameter,
+    PersonController.getPersonById
+  );
+  router.put(
+    "/{personId}",
+    PersonValidator.validateIdParameter,
+    PersonValidator.validateDto,
+    PersonController.updatePerson
+  );
+  router.delete(
+    "/{personId}",
+    PersonValidator.validateIdParameter,
+    PersonController.deletePerson
+  );
 
   return router;
 };

@@ -1,4 +1,5 @@
 const PersonService = require("./person.service");
+const { NotFoundError } = require("../error/errorTypes");
 
 class PersonController {
   getPersons(req, res) {
@@ -12,9 +13,23 @@ class PersonController {
     res.status(200).json(personModel);
   }
 
-  getPersonById(req, res) {}
+  getPersonById(req, res) {
+    const { personId } = req.params;
+    const person = PersonService.getPersonById(personId);
 
-  updatePerson(req, res) {}
+    if (!person) {
+      throw new NotFoundError("Person");
+    }
+
+    res.status(200).json(person);
+  }
+
+  updatePerson(req, res) {
+    const { personId } = req.params;
+    const personDto = req.body;
+    const personModel = PersonService.updatePersonById(personId, personDto);
+    res.status(200).json(personModel);
+  }
 
   deletePerson(req, res) {}
 }

@@ -15,6 +15,12 @@ class PersonService {
     this.#persons.push(person);
     return person;
   }
+
+  getPersonById(personId) {
+    return this.#persons.find((person) => person.id === personId);
+  }
+
+  updatePersonById(personId, personDto) {}
 }
 
 module.exports = new PersonService();

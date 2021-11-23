@@ -29,7 +29,7 @@ class NotFoundError extends DomainError {
   constructor(modelName) {
     const message = `${modelName} was not found`;
     super(message);
-    this.message = message;
+    this.data = message;
   }
 }
 
