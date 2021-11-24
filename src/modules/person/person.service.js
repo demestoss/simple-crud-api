@@ -1,26 +1,25 @@
-const PersonModel = require("./person.model");
+const PersonRepository = require("./person.repository");
 
 class PersonService {
-  #persons = [
-    PersonModel({ name: "John", age: 23, hobbies: ["none"] }),
-    PersonModel({ name: "Jack", age: 12, hobbies: ["guitar", "else"] }),
-  ];
-
   getAllPersons() {
-    return this.#persons;
+    return PersonRepository.getAll();
   }
 
   createPerson(personDto) {
-    const person = PersonModel(personDto);
-    this.#persons.push(person);
-    return person;
+    return PersonRepository.create(personDto);
   }
 
   getPersonById(personId) {
-    return this.#persons.find((person) => person.id === personId);
+    return PersonRepository.getById(personId);
   }
 
-  updatePersonById(personId, personDto) {}
+  updatePersonById(personId, personDto) {
+    return PersonRepository.update(personId, personDto);
+  }
+
+  deletePersonById(personId) {
+    return PersonRepository.delete(personId);
+  }
 }
 
 module.exports = new PersonService();

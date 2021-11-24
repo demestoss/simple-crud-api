@@ -1,10 +1,25 @@
 const { v4: uuidv4 } = require("uuid");
 
-const PersonModel = ({ name, age, hobbies }) => ({
-  id: uuidv4(),
-  name,
-  age,
-  hobbies,
-});
+class PersonModel {
+  create(personDto) {
+    const { name, age, hobbies } = personDto;
+    return {
+      id: uuidv4(),
+      name,
+      age,
+      hobbies,
+    };
+  }
 
-module.exports = PersonModel;
+  update(personModel, personDto) {
+    const { name, age, hobbies } = personDto;
+    return {
+      id: personModel.id,
+      name,
+      age,
+      hobbies,
+    };
+  }
+}
+
+module.exports = new PersonModel();
