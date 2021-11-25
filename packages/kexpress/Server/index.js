@@ -1,5 +1,5 @@
 const http = require("http");
-const { Response } = require("../Response");
+const Response = require("../Response");
 const Request = require("../Request");
 const Router = require("../modules/Router");
 const RouterList = require("../modules/Router/RouterList");
