@@ -1,25 +1,29 @@
-const PersonRepository = require("./person.repository");
-
 class PersonService {
+  #personRepository;
+
+  constructor(personRepository) {
+    this.#personRepository = personRepository;
+  }
+
   getAllPersons() {
-    return PersonRepository.getAll();
+    return this.#personRepository.getAll();
   }
 
   createPerson(personDto) {
-    return PersonRepository.create(personDto);
+    return this.#personRepository.create(personDto);
   }
 
   getPersonById(personId) {
-    return PersonRepository.getById(personId);
+    return this.#personRepository.getById(personId);
   }
 
   updatePersonById(personId, personDto) {
-    return PersonRepository.update(personId, personDto);
+    return this.#personRepository.update(personId, personDto);
   }
 
   deletePersonById(personId) {
-    return PersonRepository.delete(personId);
+    return this.#personRepository.delete(personId);
   }
 }
 
-module.exports = new PersonService();
+module.exports = PersonService;

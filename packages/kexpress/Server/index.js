@@ -4,6 +4,8 @@ const Request = require("../Request");
 const Router = require("../modules/Router");
 const RouterList = require("../modules/Router/RouterList");
 const Middleware = require("../modules/Middleware");
+const RequestWrapper = require("../Request/RequestWrapper");
+const ResponseWrapper = require("../Response/ResponseWrapper");
 const { HOST } = require("../config");
 
 class Server {
@@ -19,6 +21,10 @@ class Server {
 
   listen(port, callback) {
     this.server.listen(port, HOST, callback);
+  }
+
+  close(callback) {
+    this.server.close(callback);
   }
 
   middleware(...args) {
@@ -83,22 +89,22 @@ class Server {
   async #requestLoop(req, res) {
     const response = new Response(res);
     const request = new Request(req);
+    const wrappedRequest = new RequestWrapper(request);
+    const wrappedResponse = new ResponseWrapper(response);
 
     try {
       const data = this.#findRoute(request);
-
-      if (!data) return this.#routeNotFound(request, response);
+      if (!data) return this.#routeNotFound(wrappedRequest, wrappedResponse);
 
       const { route, middlewares, fullUrl } = data;
-
       await request.parseBody();
       request.parseParams(fullUrl);
 
-      this.#middlewares.execute(request, response);
-      middlewares.execute(request, response);
-      route.executeRouteCallbacks(request, response);
+      this.#middlewares.execute(wrappedRequest, wrappedResponse);
+      middlewares.execute(wrappedRequest, wrappedResponse);
+      route.executeRouteCallbacks(wrappedRequest, wrappedResponse);
     } catch (e) {
-      this.#applicationError(request, response, e);
+      this.#applicationError(wrappedRequest, wrappedResponse, e);
     }
 
     if (!response.isFinished()) {

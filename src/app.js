@@ -26,6 +26,14 @@ class App {
       console.log(`Server has been started on port ${port}`);
     });
   }
+
+  stop() {
+    this.#kexpressApp.close();
+  }
+
+  get httpServer() {
+    return this.#kexpressApp.server;
+  }
 }
 
 module.exports = App;

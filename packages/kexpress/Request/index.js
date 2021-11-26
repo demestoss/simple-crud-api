@@ -30,13 +30,13 @@ class Request {
         this.#method
       )
     ) {
-      const buffers = [];
-      for await (const chunk of this.#httpRequest) {
-        buffers.push(chunk);
-      }
-      const data = Buffer.concat(buffers).toString();
-
       try {
+        const buffers = [];
+        for await (const chunk of this.#httpRequest) {
+          buffers.push(chunk);
+        }
+        const data = Buffer.concat(buffers).toString();
+
         this.#body = JSON.parse(data);
       } catch (e) {
         this.#body = {};
@@ -46,7 +46,12 @@ class Request {
   }
 
   parseParams(routeUrl) {
-    this.#params = routeUrl.getUrlParams(this.#url);
+    try {
+      this.#params = routeUrl.getUrlParams(this.#url);
+    } catch (e) {
+      this.#params = {};
+      console.error("InternalServerError. Unable to parse request params.");
+    }
   }
 
   get url() {
@@ -67,6 +72,10 @@ class Request {
 
   get body() {
     return this.#body;
+  }
+
+  get httpRequest() {
+    return this.#httpRequest;
   }
 }
 

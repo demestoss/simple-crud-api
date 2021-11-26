@@ -1,45 +1,53 @@
-const PersonService = require("./person.service");
 const { NotFoundError } = require("../error/errorTypes");
 
 class PersonController {
-  getPersons(req, res) {
-    const persons = PersonService.getAllPersons();
+  #personService;
+
+  constructor(personService) {
+    this.#personService = personService;
+  }
+
+  getPersons = (req, res) => {
+    const persons = this.#personService.getAllPersons();
     res.status(200).json(persons);
-  }
+  };
 
-  createPerson(req, res) {
+  createPerson = (req, res) => {
     const personDto = req.body;
-    const personModel = PersonService.createPerson(personDto);
+    const personModel = this.#personService.createPerson(personDto);
     res.status(200).json(personModel);
-  }
+  };
 
-  getPersonById(req, res) {
+  getPersonById = (req, res) => {
     const { personId } = req.params;
-    const person = PersonService.getPersonById(personId);
+    const person = this.#personService.getPersonById(personId);
 
     if (!person) throw new NotFoundError("Person");
 
     res.status(200).json(person);
-  }
+  };
 
-  updatePerson(req, res) {
+  updatePerson = (req, res) => {
     const { personId } = req.params;
     const personDto = req.body;
-    const personModel = PersonService.updatePersonById(personId, personDto);
+    const personModel = this.#personService.updatePersonById(
+      personId,
+      personDto
+    );
 
     if (!personModel) throw new NotFoundError("Person");
 
     res.status(200).json(personModel);
-  }
+  };
 
-  deletePerson(req, res) {
+  deletePerson = (req, res) => {
     const { personId } = req.params;
-    const isDeleted = PersonService.deletePersonById(personId);
+    const isDeleted = this.#personService.deletePersonById(personId);
 
     if (!isDeleted) throw new NotFoundError("Person");
 
     res.status(204).json();
-  }
+  };
 }
 
-module.exports = new PersonController();
+module.exports = PersonController;

@@ -29,12 +29,10 @@ class Response {
 
   status(status) {
     this.#statusCode = status;
-    return this;
   }
 
   setHeader(key, value) {
     this.#headers.push([key, value]);
-    return this;
   }
 
   send(data) {
@@ -47,6 +45,10 @@ class Response {
 
   html(data) {
     this.#sendResponse(data, htmlHeaders);
+  }
+
+  get httpResponse() {
+    return this.#httpResponse;
   }
 }
 
