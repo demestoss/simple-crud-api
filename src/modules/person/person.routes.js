@@ -1,4 +1,4 @@
-const Router = require("../../../packages/kexpress/modules/Router");
+const Router = require("../../../packages/kekexpress/modules/Router");
 const PersonController = require("./person.controller");
 const PersonValidator = require("./person.validator");
 const PersonRepository = require("./person.repository");

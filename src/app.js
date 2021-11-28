@@ -1,4 +1,4 @@
-const { Server } = require("../packages/kexpress");
+const { Server } = require("../packages/kekexpress");
 const personRouter = require("./modules/person/person.routes");
 const notFoundHandler = require("./modules/notFound");
 const errorHandler = require("./modules/error");

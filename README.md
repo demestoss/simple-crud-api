@@ -1,6 +1,6 @@
 # Simple CRUD API
 
-Simple server app that uses naive express-like own written library **[kexpress](packages/kexpress/README.md)**.
+Simple server app that uses naive express-like own written library **[kekexpress](packages/kekexpress/README.md)**.
 
 It uses in-memory database underneath fo working with **Person** model.
 
