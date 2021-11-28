@@ -11,9 +11,14 @@ Firstly run:
 npm install
 ```
 
-Run server:
+Run development server:
 ```
 npm run start:dev
+```
+
+Run production build:
+```
+npm run start:prod
 ```
 
 You can configure application port, using `.env` file
